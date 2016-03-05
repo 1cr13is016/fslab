@@ -1,4 +1,4 @@
-/#include <iostream>
+ #include <iostream>
 #include <fstream>
 #include <string>
 #include<stdlib.h>
@@ -12,17 +12,16 @@ class Student {
 public:
     void read();
     void pack(string filename);
-    int search(string,string);
-    void unpack(string);
-    int modify(string key,string);
+    int search(string key,string filename);
+    void unpack(string filename);
+    //int modify(string key,string);
     };
 int main()
 {
     int ch;
-
     Student s;
     string key;
-   string filename;
+    string filename;
     while(1)
     {
     cout<<"1.insert 2.search 3.delete 4.modify\n";
@@ -35,26 +34,29 @@ int main()
             s.read();
             cout<<"enter filename ";
             cin >>filename;
-            s.pack(filename.c_str());
+            s.pack(filename);
             break;
         case 2:
             cout<<"Enter the USN to be searched\n";
             cin>>key;
             cout<<"enter filename ";
-                        cin >> filename;
+            cin >> filename;
             s.search(key,filename);
             break;
-        case 3:
+       /* case 3:
             s.modify(key,filename);
             break;
         case 4:
             //s.unpack();
             break;
 
-            }
+            }*/
         }
 }
-void Student::read(){
+    return 0;
+}
+void Student::read()
+{
     cout<<"enter name"<<endl;
     cin>>name;
     cout<<"enter usn"<<endl;
@@ -68,7 +70,7 @@ void Student::pack(string filename)
 {
     string buffer;
     fstream fp;
-    fp.open(filename.c_str(),ios::out);
+    fp.open(filename.c_str(),ios::out|ios::app);
     buffer= usn+"|"+name+"|"+sem+"|"+branch;
     buffer.resize(100,'$');
     fp<<buffer<<endl;
@@ -78,33 +80,33 @@ void Student::pack(string filename)
 void Student::unpack(string filename)
 {
 	string temp;
-    ifstream myf(filename.c_str());
-    getline(myf,usn,'|');
-    getline(myf,name,'|');
-    getline(myf,branch,'|');
-    getline(myf,sem,'$');
-    getline(myf,temp);
-    myf.close();
+	fstream fp;
+    fp.open(filename.c_str(),ios::in);
+    getline(fp,usn,'|');
+    getline(fp,name,'|');
+    getline(fp,branch,'|');
+    getline(fp,sem,'$');
+    getline(fp,temp);
+    fp.close();
 
 }
-int Student::search(string key,string fname)
+int Student::search(string key,string filename)
 {
-fstream fp;
+    fstream fp;
 	string buffer;
-	int flag=0, pos=0;
-
-	fp.open(fname.c_str(),ios::in);
+	int flag=0,pos=0;
+	fp.open(filename.c_str(),ios::in);
 	while (!fp.eof())
 	{
 		buffer.erase();
 		getline(fp,buffer);
-		unpack(fname.c_str());
+		unpack(filename);
 		if (key==usn) {
 			cout<<"\nFound the key. The record is  "<<buffer;
-		pos=fp.tellp();
-		cout<<"Printing the position\n"<<pos;
+			pos=fp.tellp();
+		   cout<<"Printing the position\n"<<pos;
 		flag=1;
-		return pos;
+		return pos-100;
 		}
 	}
 	fp.close();
@@ -113,7 +115,7 @@ fstream fp;
 	}
 return 0;
 }
-int Student::modify(string key,string filename)
+/*int Student::modify(string key,string filename)
 {
 	string buffer;
 	fstream file;
@@ -121,9 +123,8 @@ int Student::modify(string key,string filename)
 	cout<<"Enter the usn to be searched\n";
 	cin>>key;
 	cout<<"enter the filename";
-			cin>>filename;
+	cin>>filename;
 	pos=search(key,filename);
-	pos=pos-100;
 	if(pos){
 	cout<<"\n What to modify?";
 	cin>>choice;
@@ -136,10 +137,7 @@ int Student::modify(string key,string filename)
 		case 4:	cout<<"\nSemster:";cin>>sem;break;
 		default: cout <<"Wrong Choice";
 	}
-
-
-	file.open(filename.c_str(),ios::out);
-	pos-=101;//skip $\n
+    file.open(filename.c_str(),ios::out);
 	file.seekp(pos,ios::beg);
 	pack(filename);
 	file.close();
@@ -147,4 +145,4 @@ int Student::modify(string key,string filename)
 	else
 		exit(0);
 	return 0;
-}
+}*/
