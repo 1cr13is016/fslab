@@ -147,3 +147,4 @@ int Student::modify(string key,string filename)
 	else
 		exit(0);
 	return 0;
+}
