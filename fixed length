@@ -19,7 +19,6 @@ public:
 int main()
 {
     int ch;
-    //fstream f;
 
     Student s;
     string key;
